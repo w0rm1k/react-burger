@@ -30,6 +30,7 @@ class BurgerBuilder extends Component {
 	}
 
 	componentDidMount() {
+		console.log(this.props);
 		axios.get('https://react-burger-aa5db.firebaseio.com/ingredients.json')
 			.then(response => {
 				this.setState({
@@ -101,28 +102,37 @@ class BurgerBuilder extends Component {
 
 	purchaseContinueHandler = () => {
 		//alert('You continue!');
-		this.setState ({loading: true})
-		const order = {
-			ingredients: this.state.ingredients,
-			price: this.state.totalPrice.toFixed(2),
-			customer: {
-				name: 'Viktor Sapsaj',
-				address: {
-					street: 'TestStreet',
-					zipCode: '456555',
-					country: 'Russia'
-				},
-				email: 'asd@gmail.com',
-			},
-			deliveryMethod: 'fastest'
+		// this.setState ({loading: true})
+		// const order = {
+		// 	ingredients: this.state.ingredients,
+		// 	price: this.state.totalPrice.toFixed(2),
+		// 	customer: {
+		// 		name: 'Viktor Sapsaj',
+		// 		address: {
+		// 			street: 'TestStreet',
+		// 			zipCode: '456555',
+		// 			country: 'Russia'
+		// 		},
+		// 		email: 'asd@gmail.com',
+		// 	},
+		// 	deliveryMethod: 'fastest'
+		// }
+		// axios.post('/orders.json', order)
+		// 	.then(response => {
+		// 		this.setState({loading: false, purchasing: false})
+		// 	})
+		// 	.catch(error => {
+		// 		this.setState({loading: false, purchasing: false})
+		// 	});
+		const queryParams = [];
+		for (let i in this.state.ingredients) {
+			queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
 		}
-		axios.post('/orders.json', order)
-			.then(response => {
-				this.setState({loading: false, purchasing: false})
-			})
-			.catch(error => {
-				this.setState({loading: false, purchasing: false})
-			});
+		const queryString = queryParams.join('&');
+		this.props.history.push({
+			pathname: '/checkout',
+			search: '?' + queryString
+		});
 	}
 
 	render() {
