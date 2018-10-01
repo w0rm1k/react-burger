@@ -88,9 +88,12 @@ class ContactData extends Component {
                         displayValue: 'Cheapest'
                     }]
                 },
-                value: ''
+                value: 'fastest',
+                validation: {},
+                valid: true
             }
         },
+        formIsValid: false,
         loading: false
     }
 
@@ -120,7 +123,7 @@ class ContactData extends Component {
         }
 		const order = {
 			ingredients: this.props.ingredients,
-            price: this.props.price.toFixed(2),
+            price: this.props.price,
             orderData: formData
 		}
 		axios.post('/orders.json', order)
@@ -144,8 +147,13 @@ class ContactData extends Component {
         updatedFormElement.valid = this.checkValidation(updatedFormElement.value, updatedFormElement.validation);
         updatedFormElement.touched = true;
         updatedOrderForm[inputIdentidier] = updatedFormElement;
-        console.log(updatedFormElement);
-        this.setState({orderForm: updatedOrderForm});
+        
+        let formIsValid = true;
+        for (let inputIdentidier in updatedOrderForm) {
+            formIsValid = updatedOrderForm[inputIdentidier].valid && formIsValid;
+        }
+        //console.log(formIsValid);
+        this.setState({orderForm: updatedOrderForm, formIsValid: formIsValid});
     }
 
     render() {
@@ -171,7 +179,7 @@ class ContactData extends Component {
                         valueType={formElement.id}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)}/>
                 ))}
-                <Button btnType="Success">ORDER</Button>
+                <Button btnType="Success" disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
         );
         if (this.state.loading) {
