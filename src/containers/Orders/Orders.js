@@ -9,8 +9,19 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Orders extends Component {
 
-    componentDidMount() {
+    componentDidMount() {   
         this.props.onFetchOrders();
+    }
+
+    onDeleteOrder = (id) => {
+        axios.delete('/orders/' + id + '.json')
+            .then(res => {
+                console.log(res, 'in delete order handler');
+                this.props.onFetchOrders();
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     render() {
@@ -20,7 +31,8 @@ class Orders extends Component {
                 <Order 
                     key={order.id}
                     ingredients={order.ingredients}
-                    price={order.price}/>
+                    price={order.price}
+                    deleteOrder={() => this.onDeleteOrder(order.id)}/>
             ))
         }
         return (
