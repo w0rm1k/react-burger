@@ -57,8 +57,7 @@ export const fetchOrdersFail = (error) => {
 
 export const fetchOrdersStart = () => {
     return {
-        type: actionTypes.FETCH_ORDERS_START,
-
+        type: actionTypes.FETCH_ORDERS_START
     }
 }
 
@@ -80,5 +79,25 @@ export const fetchOrders = () => {
             .catch(err => {
                 dispatch(fetchOrdersFail(err))
             }) 
+    }
+}
+
+export const deleteOrderStart = () => {
+    return {
+        type: actionTypes.DELETE_ORDER
+    }
+}
+
+export const deleteOrder = (id) => {
+    return dispatch => {
+        dispatch(deleteOrderStart());
+        axios.delete('/orders/' + id + '.json')
+            .then(res => {
+                console.log(res, 'in delete order handler');
+                dispatch(fetchOrders())
+            })
+            .catch(err => {
+                console.log(err);
+            });
     }
 }

@@ -13,17 +13,6 @@ class Orders extends Component {
         this.props.onFetchOrders();
     }
 
-    onDeleteOrder = (id) => {
-        axios.delete('/orders/' + id + '.json')
-            .then(res => {
-                console.log(res, 'in delete order handler');
-                this.props.onFetchOrders();
-            })
-            .catch(err => {
-                console.log(err);
-            });
-    }
-
     render() {
         let orders = <Spinner />;
         if (!this.props.loading) {
@@ -32,7 +21,7 @@ class Orders extends Component {
                     key={order.id}
                     ingredients={order.ingredients}
                     price={order.price}
-                    deleteOrder={() => this.onDeleteOrder(order.id)}/>
+                    deleteOrder={() => this.props.onDeleteOrder(order.id)}/>
             ))
         }
         return (
@@ -52,7 +41,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchOrders: () => {dispatch(actions.fetchOrders())}
+        onFetchOrders: () => {dispatch(actions.fetchOrders())},
+        onDeleteOrder: (id) => {dispatch(actions.deleteOrder(id))}
     }
 }
 

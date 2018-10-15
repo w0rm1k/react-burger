@@ -8,6 +8,10 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
     switch (action.type){
+        case actionTypes.DELETE_ORDER:
+            return {
+                ...state
+            }
         case actionTypes.FETCH_ORDERS_START:
             return {
                 ...state,
